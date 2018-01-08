@@ -9,7 +9,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     [SerializeField] string localHost;
     [SerializeField] string user;
     [SerializeField] string password;
-    [SerializeField] string dateBaseName;
+    [SerializeField] string dateBaseName ;
 
     MySqlConnection mySQLconnection;
     MySqlCommand mySQLcommand;
