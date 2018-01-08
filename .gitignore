@@ -32,3 +32,27 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+<<<<<<< HEAD
+Test3/Temp/UnityLockfile
+Test3/.vs/Test3/v15/Server/sqlite3/storage.ide-wal
+Test3/.vs/Test3/v15/Server/sqlite3/storage.ide-shm
+Test3/.vs/Test3/v15/Server/sqlite3/storage.ide
+
+Test3/Library/*/
+Test3/Library/
+Test3/Temp/*
+Test3/Library/metadata/*
+Test3/Library/metadata/*/*
+=======
+*.exe
+Test3/Temp/UnityLockfile
+Test3/.vs/Test3/v15/Server/sqlite3/storage.ide-shm
+Test3/.vs/Test3/v15/Server/sqlite3/storage.ide-wal
+>>>>>>> Log-In
+*.cache
+Test3/Temp/UnityTempFile-f3b8d8469917bbc45b7ab8070572d488
+*.backup
+Test3/Temp/UnityTempFile-5d2a3c86888038546889262bbce3c159
+
+*.dwlt
+
