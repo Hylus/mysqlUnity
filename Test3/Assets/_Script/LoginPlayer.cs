@@ -15,28 +15,13 @@ public class LoginPlayer : MonoBehaviour {
 
     private void Start()
     {
-        Mediator.Instance.Subscribe<SceneIsLoadedCmd>(OnSceneIsLoadedCmd);
         Mediator.Instance.Subscribe<LoggedCmd>(OnLoggedCmd);
-    }
-
-    private void OnDestroy()
-    {
-        Mediator.Instance.DeleteSubscriber<SceneIsLoadedCmd>(OnSceneIsLoadedCmd);
-        Mediator.Instance.DeleteSubscriber<LoggedCmd>(OnLoggedCmd);
     }
 
     void OnLoggedCmd(LoggedCmd cmd)
     {
-        // maybe i must delete subscribes at this moment
-
         buttonEnter.interactable = false;
         buttonRegisterNow.interactable = false;
-    }
-
-    void OnSceneIsLoadedCmd(SceneIsLoadedCmd cmd)
-    {
-        Mediator.Instance.DeleteSubscriber<SceneIsLoadedCmd>(OnSceneIsLoadedCmd);
-        loginErrorText.text = "The game has been loaded, press left mouse button";
     }
 
     void OnShowStatementCmd(ShowStatementCmd cmd)
@@ -48,10 +33,7 @@ public class LoginPlayer : MonoBehaviour {
     public void LogIn()
     {
         Mediator.Instance.Subscribe<ShowStatementCmd>(OnShowStatementCmd);
+        DataBaseConnection.Instance.LoginValidate(loginField.text, passwordField.text);
 
-        var cmd = new LogInCmd();
-        cmd.Login = loginField.text;
-        cmd.Password = passwordField.text;
-        Mediator.Instance.Publish<LogInCmd>(cmd);
     }
 }

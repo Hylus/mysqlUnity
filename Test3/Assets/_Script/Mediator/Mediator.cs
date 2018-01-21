@@ -9,7 +9,7 @@ public class Mediator : Singleton<Mediator>
 {
     static Mediator mediatorInstance;
 
-    
+    /*
     private void Awake()
     {
         _subscribers.Clear();
@@ -23,7 +23,12 @@ public class Mediator : Singleton<Mediator>
             DestroyObject(gameObject);
         }
     }
+    */
 
+    public void DestroyAllSubscribers() 
+    {
+        _subscribers.Clear();
+    }
 
     //make sure you're using the System.Collections.Generic namespace
     private Dictionary<System.Type, System.Delegate> _subscribers = new Dictionary<System.Type, System.Delegate>();

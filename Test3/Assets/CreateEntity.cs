@@ -12,6 +12,8 @@ public class CreateEntity : MonoBehaviour {
     [SerializeField] Button returnButton;
     [SerializeField] Text errorText;
 
+
+  
     private void Awake()
     {
         List<string> professionNameList = new List<string>(DataBaseConnection.Instance.GetProfessionsName());
@@ -41,11 +43,14 @@ public class CreateEntity : MonoBehaviour {
         }
         else if (result == 0)
         {
-            Debug.Log("login in not available");
+            Debug.Log("login is not available");
         }
         else
         {
             Debug.Log("created new entity");
+
+            Mediator.Instance.Publish<CreatedNewEntityCmd>(null);
+            canvas.gameObject.SetActive(false);
         }
     }
 

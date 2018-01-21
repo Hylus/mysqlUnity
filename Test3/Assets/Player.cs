@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    [SerializeField] bool debugMode;
 
     int loginID;
     int raceID;
 
     private void Awake()
     {
-        if(debugMode)
-        {
-            Debug.Log("Debug mode is on, your loginID is 1");
-        }
-        loginID = (debugMode) ? 1 : GameObject.Find("DataBase").GetComponent<DataBaseConnection>().CurrentLoginID;
+
+        //loginID = (debugMode) ? 1 : DataBaseConnection.Instance.CurrentLoginID;
         
     }
 

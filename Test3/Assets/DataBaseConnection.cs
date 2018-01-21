@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 public class DataBaseConnection : Singleton<DataBaseConnection>
 {
@@ -15,19 +16,25 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     MySqlCommand mySQLcommand;
     MySqlDataReader mySQLreader;
 
+    public bool debugMode;
+
     static DataBaseConnection dataBaseConnectionInstance;
 
     int currentLoginID;
-    public int CurrentLoginID { get { return currentLoginID; } }
+   // public int CurrentLoginID { get { return currentLoginID; } }
 
     private void Awake()
     {
+        if(debugMode)
+        {
+            Debug.Log("debug mode is on, your LoginID = 1");
+            currentLoginID = 1;
+        }
+
         DontDestroyOnLoad(this);
         if (dataBaseConnectionInstance == null)
         {
             dataBaseConnectionInstance = this;
-            Mediator.Instance.Subscribe<RegisterCmd>(OnRegisterCmd);
-            Mediator.Instance.Subscribe<LogInCmd>(OnLogInCmd);
         }
         else
         {
@@ -152,11 +159,9 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     }
 
 
-    void OnLogInCmd(LogInCmd cmd)
+    public void LoginValidate(string login, string password)
     {
-
-        string login = cmd.Login;
-        string password = cmd.Password;
+        password = HashingMD5(password);
 
         if (CheckExistingPlayer(login) == 1)
         {
@@ -165,7 +170,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
                 int loginID = GetLoginID(login);
                 if (loginID != -1)
                 {                    
-                    ShowStatement("Loging, please wait!");
+                    ShowStatement("Logging, please wait!");
                     Logged(loginID);
                 }
                 else
@@ -273,11 +278,12 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         {
             if (Connect())
             {
+                password = HashingMD5(password);
                 string command = "INSERT INTO `uzytkownik` (`Login`, `Haslo`) VALUES('" + login + "', '" + password + "');";
                 mySQLcommand = new MySqlCommand(command, mySQLconnection);
                 mySQLcommand.ExecuteNonQuery();
-                Debug.Log("New user was adding");
-                ShowStatement("New user was adding");
+                Debug.Log("New user added");
+                ShowStatement("New user added");
                 mySQLconnection.Close();
             }
             else
@@ -295,6 +301,55 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
             Debug.Log("database interrupt");
             ShowStatement("database is not connected");
         }       
+    }
+
+    public string[] EntitiesName(ref string[] entities)
+    {
+        if (Connect())
+        {
+            string command = "select ImiePostaci from Postacie where IDUzytkownika = '" + currentLoginID + "'";
+            mySQLcommand = new MySqlCommand(command, mySQLconnection);
+            mySQLreader = mySQLcommand.ExecuteReader();
+
+            int i = 0;
+            while (mySQLreader.Read())
+            {
+                entities[i++] = mySQLreader["ImiePostaci"].ToString();            
+            }
+            mySQLreader.Close();
+            mySQLconnection.Close();
+            return entities;
+        }
+        else
+        {
+            return entities;
+        }
+    }
+
+    public int EntityQuantity() 
+    {
+        if (Connect())
+        {
+            string command = "SELECT Count(IDPostaci) from Postacie where IDuzytkownika = '" + currentLoginID + "'";
+            mySQLcommand = new MySqlCommand(command, mySQLconnection);
+            int number = System.Convert.ToInt32(mySQLcommand.ExecuteScalar());
+            mySQLconnection.Close();
+            return number;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    string HashingMD5(string password)
+    {
+        string salt = "dataBazych";
+        password += salt;
+        MD5 md5 = new MD5CryptoServiceProvider();
+        byte[] bytes = md5.ComputeHash(System.Text.Encoding.Unicode.GetBytes(password));
+        string result = System.BitConverter.ToString(bytes).Replace("-", System.String.Empty);
+        return result;
     }
 
     /// <summary>
@@ -337,9 +392,9 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         // TODO 
     }
 
-    void OnRegisterCmd(RegisterCmd cmd)
+    public void Register (string login, string password)
     {
-        AddAccount(cmd.Login, cmd.Password);
+        AddAccount(login, password);
     }
 
     void ShowStatement(string statement)
@@ -350,27 +405,6 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     }
 
 
-    [ContextMenu("CheckPasswordCorrectTEST()")]
-    void CheckPasswordCorrectTEST()
-    {
-        if (CheckPasswordCorrect("Mac", "Mac") == 1)
-        {
-            Debug.Log("Password is correct");
-        }
-        if (CheckPasswordCorrect("Mac", "Mac") == 0)
-        {
-            Debug.Log("Password is incorrect");
-        }
-
-        if (CheckPasswordCorrect("Mac", "Kac") == 1)
-        {
-            Debug.Log("Password is correct");
-        }
-        if (CheckPasswordCorrect("Mac", "Kac") == 0)
-        {
-            Debug.Log("Password is incorrect");
-        }
-    }
 
     [ContextMenu("ShowPlayers()")]
     void ShowPlayers()
@@ -397,7 +431,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     void AddRandomPlayerTest()
     {
         string name = System.Guid.NewGuid().ToString();
-        name = name.Substring(0, 30); //if you want set varchar's length to 30
+        name = name.Substring(0, 30);
         Debug.Log("try to add player - " + name);
         AddAccount(name, "haslo");
     }
@@ -408,6 +442,13 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         string name = "Mac";
         Debug.Log("try to add player - " + name);
         AddAccount(name, "haslo");
+    }
+
+    [ContextMenu("HashingMD5TEST()")]
+    void HashingMD5TEST()
+    {
+        string test = HashingMD5("Mac");
+        Debug.Log(test);
     }
 
 }
