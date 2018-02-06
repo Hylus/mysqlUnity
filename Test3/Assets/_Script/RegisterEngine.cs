@@ -17,7 +17,7 @@ public class RegisterEngine : MonoBehaviour {
     void OnLoggedCmd(LoggedCmd cmd)
     {
         Mediator.Instance.DestroyAllSubscribers();
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("WaitingRoom");
 
     }
 

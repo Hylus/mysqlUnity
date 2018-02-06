@@ -45,7 +45,7 @@ public class RegisterPlayerCanvas : MonoBehaviour {
             }
 
             Mediator.Instance.Subscribe<ShowStatementCmd>(OnShowStatementCmd);
-            DataBaseConnection.Instance.Register(loginField.text, passwordField.text);
+            DataBaseConnection.Instance.Register(loginField.text.Trim(), passwordField.text);
         }
     }
 

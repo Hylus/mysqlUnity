@@ -40,10 +40,12 @@ public class CreateEntity : MonoBehaviour {
         if(result == -1)
         {
             Debug.Log("database interrupt");
+            errorText.text = "database interrupt";
         }
         else if (result == 0)
         {
             Debug.Log("login is not available");
+            errorText.text = "login is not available";
         }
         else
         {
@@ -52,6 +54,11 @@ public class CreateEntity : MonoBehaviour {
             Mediator.Instance.Publish<CreatedNewEntityCmd>(null);
             canvas.gameObject.SetActive(false);
         }
+    }
+
+    public void ClearAlert()
+    {
+        errorText.text = "";
     }
 
     public void Return()

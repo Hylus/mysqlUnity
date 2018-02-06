@@ -13,6 +13,7 @@ public class PlayerRaces : MonoBehaviour {
     private void Awake()
     {
         Mediator.Instance.Subscribe<CreatedNewEntityCmd>(OnCreatedNewEntityCmd);
+        Mediator.Instance.Subscribe<RefreshListCmd>(OnRefreshListCmd);
     }
 
     void Start()
@@ -47,8 +48,6 @@ public class PlayerRaces : MonoBehaviour {
     {
         ShowCreatedEntities();
         InspectEntityButton();
-
-
     }
 
     void ShowCreatedEntities()
@@ -74,6 +73,23 @@ public class PlayerRaces : MonoBehaviour {
         }
     }
 
+    void OnRefreshListCmd(RefreshListCmd cmd)
+    {
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        ClearEntityShowList();
+        ShowCreatedEntities();
+
+    }
+
+    private void OnDestroy()
+    {
+        Mediator.Instance.DeleteSubscriber<CreatedNewEntityCmd>(OnCreatedNewEntityCmd);
+        Mediator.Instance.DeleteSubscriber<RefreshListCmd>(OnRefreshListCmd);
+    }
 
 
 }

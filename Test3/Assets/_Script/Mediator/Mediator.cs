@@ -28,6 +28,8 @@ public class Mediator : Singleton<Mediator>
     public void DestroyAllSubscribers() 
     {
         _subscribers.Clear();
+
+        DataBaseConnection.Instance.Start();
     }
 
     //make sure you're using the System.Collections.Generic namespace
