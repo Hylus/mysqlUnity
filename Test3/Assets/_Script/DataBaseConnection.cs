@@ -24,6 +24,8 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     int currentLoginID;
     int currentEntityID;
 
+    public int CurrentEntityID { get { return currentEntityID; } set { currentEntityID = value; } }
+
     private void Awake()
     {
         if(debugMode)
@@ -44,16 +46,6 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         {
             DestroyObject(gameObject);
         }
-    }
-
-    public void Start()
-    {
-        Mediator.Instance.Subscribe<ChoseEntityCmd>(OnChoseEntityCmd);
-    }
-
-    void OnChoseEntityCmd(ChoseEntityCmd cmd)
-    {
-        currentEntityID = cmd.EntityID;
     }
 
     public List<string> GetProfessionsName()
@@ -316,7 +308,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         }       
     }
 
-    public string[] EntitiesName(ref string[] entities)
+    public void EntitiesName(ref string[] entities)
     {
         Array.Clear(entities, 0, entities.Length);
         if (Connect())
@@ -332,43 +324,10 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
             }
             mySQLreader.Close();
             mySQLconnection.Close();
-            return entities;
-        }
-        else
-        {            
-            return entities;
         }
     }
 
-    /*
-    public List<int> GetAllStatistics(int entityID, ref List<int> entityStatistics)
-    {
-        entityStatistics.Clear();
-        if (Connect())
-        {
-            string command = "select Sila,Zycie from Statystyki where IDPostaci = '" + entityID + "'";
-            mySQLcommand = new MySqlCommand(command, mySQLconnection);
-            mySQLreader = mySQLcommand.ExecuteReader();
-
-            // int i = 0;
-            while (mySQLreader.Read())
-            {
-                entityStatistics.Add(System.Convert.ToInt32(mySQLreader["Sila"]));
-                entityStatistics.Add(System.Convert.ToInt32(mySQLreader["Zycie"]));
-            }
-            mySQLreader.Close();
-            mySQLconnection.Close();
-            return entityStatistics;
-        }
-        else
-        {
-            return entityStatistics;
-        }
-    }
-    */
-
-
-    public List<string> GetTotalityStatistics (int entityID, ref List<string> totalityStatistics)
+    public void GetTotalityStatistics (int entityID, ref List<string> totalityStatistics)
     {
         totalityStatistics.Clear();
 
@@ -377,11 +336,6 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
             totalityStatistics.Add (GetEntityTotalityPower(entityID).ToString() + " Sila");
             totalityStatistics.Add (GetEntityTotalityHealth(entityID).ToString() + " Zycie");
             mySQLconnection.Close();
-            return totalityStatistics;
-        }
-        else
-        {
-            return totalityStatistics;
         }
     }
 
@@ -661,60 +615,6 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         }
     }
 
-    /*
-    public List<int> GetStatistics(int entityID, ref List<int> entityStatistics)
-    {
-        entityStatistics.Clear();
-        if (Connect())
-        {
-            string command = "select Sila,Zycie from Statystyki where IDPostaci = '" + entityID + "'";
-            mySQLcommand = new MySqlCommand(command, mySQLconnection);
-            mySQLreader = mySQLcommand.ExecuteReader();
-
-            // int i = 0;
-            while (mySQLreader.Read())
-            {
-                entityStatistics.Add(System.Convert.ToInt32(mySQLreader["Sila"]));
-                entityStatistics.Add(System.Convert.ToInt32(mySQLreader["Zycie"]));
-            }
-            mySQLreader.Close();
-            mySQLconnection.Close();
-            return entityStatistics;
-        }
-        else
-        {
-            return entityStatistics;
-        }
-    }
-    */
-
-    /*
-    public List<string> GetStatistics(int entityID, ref List<string> entityStatistics)
-    {
-        entityStatistics.Clear();
-        if (Connect())
-        {
-            string command = "select Sila,Zycie from Statystyki where IDPostaci = '" + entityID + "'";
-            mySQLcommand = new MySqlCommand(command, mySQLconnection);
-            mySQLreader = mySQLcommand.ExecuteReader();
-
-           // int i = 0;
-            while (mySQLreader.Read())
-            {
-                entityStatistics.Add (mySQLreader["Sila"].ToString() + " Sila");
-                entityStatistics.Add (mySQLreader["Zycie"].ToString() + " Zycie");
-            }
-            mySQLreader.Close();
-            mySQLconnection.Close();
-            return entityStatistics;
-        }
-        else
-        {          
-            return entityStatistics;
-        }
-    }
-    */
-
     public int GetEntityID(string entityName)
     {
         if (Connect())
@@ -820,7 +720,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         return name;
     }
 
-    public List<string> GetAdventureMonsters(ref List<string>monsters, string title)
+    public void GetAdventureMonsters(ref List<string>monsters, string title)
     {
         monsters.Clear();
         if (Connect())
@@ -829,8 +729,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
        //     Debug.Log(command);
             mySQLcommand = new MySqlCommand(command, mySQLconnection);
             mySQLreader = mySQLcommand.ExecuteReader();
-
-            
+     
             string tmp="";
             int quantity;
             int monsterID;
@@ -838,12 +737,8 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
             while (mySQLreader.Read())
             {
                 tmp = mySQLreader["Potwory"].ToString();
-              //  Debug.Log(tmp);
             }
-
             mySQLreader.Close();
-           // mySQLconnection.Close();
-
             try
             {
                 int i = 0;
@@ -871,13 +766,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
             {
                 Debug.Log("something in DB is wrong!");
             }       
-            return monsters;
         }
-        else
-        {
-            return monsters;
-        }
-
     }
 
     public int GetCurrentLevel()
@@ -970,7 +859,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         }
     }
 
-    public List<string> GetFinishedAdventureTitle(ref List<string> titles)
+    public void GetFinishedAdventureTitle(ref List<string> titles)
     {
         titles.Clear();
         if (Connect())
@@ -991,11 +880,10 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         {
             titles.Add("database error");
         }
-        return titles;
     }
 
 
-    public List<string> GetUnfinishedAdventureTitle(ref List<string> titles)
+    public void GetUnfinishedAdventureTitle(ref List<string> titles)
     {
         titles.Clear();
         if (Connect())
@@ -1015,7 +903,6 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
         {
             titles.Add("database error");
         }
-        return titles;
     }
 
 

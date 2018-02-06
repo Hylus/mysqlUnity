@@ -29,7 +29,7 @@ public class Mediator : Singleton<Mediator>
     {
         _subscribers.Clear();
 
-        DataBaseConnection.Instance.Start();
+     
     }
 
     //make sure you're using the System.Collections.Generic namespace

@@ -36,7 +36,7 @@ public class PubEngine : MonoBehaviour {
     void ShowUnfinishedAdventures()
     {
         List<string> advTitles = new List<string>();
-        advTitles = DataBaseConnection.Instance.GetUnfinishedAdventureTitle(ref advTitles);
+        DataBaseConnection.Instance.GetUnfinishedAdventureTitle(ref advTitles);
 
         bool finishAdvClicked = false;
         AddButtonsToScrollPanel(ref advTitles, finishAdvClicked);
@@ -45,7 +45,7 @@ public class PubEngine : MonoBehaviour {
     void ShowFinishedAdventures()
     {
         List<string> advTitles = new List<string>();
-        advTitles = DataBaseConnection.Instance.GetFinishedAdventureTitle(ref advTitles);
+        DataBaseConnection.Instance.GetFinishedAdventureTitle(ref advTitles);
         bool finishAdvClicked = true;
         AddButtonsToScrollPanel(ref advTitles, finishAdvClicked);
     }

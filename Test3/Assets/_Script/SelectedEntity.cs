@@ -40,14 +40,12 @@ public class SelectedEntity : MonoBehaviour {
     public void ToRegisterMenu()
     {
         Mediator.Instance.DeleteSubscriber<EntityButtonClickCmd>(OnEntityButtonClickCmd);
-     //   Mediator.Instance.DestroyAllSubscribers();
         UnityEngine.SceneManagement.SceneManager.LoadScene("RegisterScene");
     }
 
     public void Play()
     {
         Mediator.Instance.DeleteSubscriber<EntityButtonClickCmd>(OnEntityButtonClickCmd);
-     //   Mediator.Instance.DestroyAllSubscribers();
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 
@@ -82,9 +80,7 @@ public class SelectedEntity : MonoBehaviour {
                     statisticsText.text += s + "\r\n";
                 }
 
-                var cmd = new ChoseEntityCmd();
-                cmd.EntityID = entityID;
-                Mediator.Instance.Publish<ChoseEntityCmd>(cmd);
+                DataBaseConnection.Instance.CurrentEntityID = entityID;
             }
         }
     }
