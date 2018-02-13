@@ -16,7 +16,7 @@ public class DataBaseConnection : Singleton<DataBaseConnection>
     MySqlConnection mySQLconnection;
     MySqlCommand mySQLcommand;
     MySqlDataReader mySQLreader;
-
+     
     public bool debugMode;
 
     static DataBaseConnection dataBaseConnectionInstance;
